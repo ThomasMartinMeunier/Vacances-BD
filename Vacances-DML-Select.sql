@@ -152,7 +152,7 @@ long canadien français de date),
 - La durée en nombre de jours des vacances.
 • Trier par nom et prénom du client, puis date d’arrivée au village vacances de la réservation
 */
-SELECT DISTINCT
+SELECT
 	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
 	RESERVATION.ID_RESERVATION,
 	LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dddd dd MMMM yyyy', 'fr-CA'),25) AS DATE_ARRIVE,
