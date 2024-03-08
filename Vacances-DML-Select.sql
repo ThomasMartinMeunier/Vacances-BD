@@ -139,4 +139,53 @@ NO_LOGEMENT NOM_VILLAGE     PAYS       CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEM
 (15 lignes affectées)
 */
 
+/*
+--4 
+Pour les clients ayant plus d’une réservation, indiquer le village, la date d’arrivée et le nombre de
+jours de chaque réservation.
+• Indiquer dans l’ordre :
+- Les nom et prénom et identifiant du client, sous le format : Sylvie Monjal (1)
+- L’identifiant de la réservation,
+- La date d’arrivée au village avec le format d’affichage : jeudi 09 mars 2024 (format
+long canadien français de date),
+- Le nom du village vacances,
+- La durée en nombre de jours des vacances.
+• Trier par nom et prénom du client, puis date d’arrivée au village vacances de la réservation
+*/
+SELECT DISTINCT
+	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
+	RESERVATION.ID_RESERVATION,
+	LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dddd dd MMMM yyyy', 'fr-CA'),25) AS DATE_ARRIVE,
+	VILLAGE.NOM_VILLAGE,
+	COUNT(SEJOUR.ID_SEJOUR) AS DUREE_VACANCE
+FROM 
+	SEJOUR
+	INNER JOIN RESERVATION
+		ON SEJOUR.ID_RESERVATION = RESERVATION.ID_RESERVATION
+	INNER JOIN CLIENT 
+		ON RESERVATION.ID_CLIENT = CLIENT.ID_CLIENT
+	INNER JOIN VILLAGE
+		ON RESERVATION.ID_VILLAGE = VILLAGE.ID_VILLAGE
+WHERE
+	CLIENT.ID_CLIENT IN (SELECT ID_CLIENT 
+						FROM 
+							RESERVATION
+						GROUP BY 
+							RESERVATION.ID_CLIENT
+						HAVING
+							COUNT(ID_CLIENT) > 1)
+GROUP BY
+	CLIENT.ID_CLIENT,
+	CLIENT.NOM,
+	CLIENT.PRENOM,
+	RESERVATION.ID_RESERVATION,
+	RESERVATION.DATE_RESERVATION,
+	VILLAGE.NOM_VILLAGE
 
+/*
+1
+7
+8
+9
+12
+*/
