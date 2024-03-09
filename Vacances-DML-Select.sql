@@ -181,11 +181,26 @@ GROUP BY
 	RESERVATION.ID_RESERVATION,
 	RESERVATION.DATE_RESERVATION,
 	VILLAGE.NOM_VILLAGE
+ORDER BY
+	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM),
+	MIN(SEJOUR.DATE_SEJOUR)
 
 /*
-1
-7
-8
-9
-12
+CLIENT                                                                                          ID_RESERVATION                          DATE_ARRIVE               NOM_VILLAGE     DUREE_VACANCE
+----------------------------------------------------------------------------------------------- --------------------------------------- ------------------------- --------------- -------------
+Daho Étienne (1)                                                                                1012                                    mercredi 27 décembre 2023 Porto-Nuevo     28
+Daho Étienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
+Daho Étienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       10
+Fiset Valérie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
+Fiset Valérie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
+Fortin Marine (9)                                                                               1017                                    dimanche 17 mars 2024     Kouros          4
+Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       16
+Plante Josée (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     12
+Plante Josée (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       12
+St-Onge Éric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
+St-Onge Éric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
+St-Onge Éric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
+
+(12 rows affected)
+
 */
