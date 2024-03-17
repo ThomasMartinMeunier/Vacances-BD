@@ -204,3 +204,89 @@ St-Onge Éric (7)                                                                
 (12 rows affected)
 
 */
+
+/*
+--5
+• Produire la liste des logements du village Casa-Dali disponibles pour toute la période du 17 au 23
+mars 2024 inclusivement.
+• Pour chaque logement disponible, indiquer dans l’ordre :
+- Le numéro du logement,
+- Le code du type de logement,
+- La description du type de logement.
+• Trier par numéro de logement.
+
+A) Écrire la requête en utilisant l’opérateur IN ou NOT IN.
+*/
+
+SELECT 
+	LOGEMENT.NO_LOGEMENT, 
+	TYPE_LOGEMENT.CODE_TYPE_LOGEMENT, 
+	TYPE_LOGEMENT.DESCRIPTION AS DESCRIPTION_TYPE_LOGEMENT
+FROM 
+	LOGEMENT 
+		INNER JOIN TYPE_LOGEMENT 
+		ON LOGEMENT.ID_TYPE_LOGEMENT = TYPE_LOGEMENT.ID_TYPE_LOGEMENT
+WHERE 
+	LOGEMENT.ID_VILLAGE = (SELECT 
+							ID_VILLAGE 
+						   FROM 
+							VILLAGE 
+						   WHERE 
+							NOM_VILLAGE = 'Casa-Dali')
+	AND LOGEMENT.ID_LOGEMENT NOT IN ( SELECT 
+											SEJOUR.ID_LOGEMENT
+									   FROM 
+											SEJOUR
+									   WHERE 
+											SEJOUR.DATE_SEJOUR BETWEEN '2024-03-17' AND '2024-03-23')
+ORDER BY 
+	LOGEMENT.NO_LOGEMENT
+
+/*
+NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
+----------- ------------------ -----------------------------------
+8           B2                 Suite 2 personnes
+11          B2                 Suite 2 personnes
+105         D2                 Chalet 4 personnes
+107         D2                 Chalet 4 personnes
+
+(4 lignes affectées)
+
+
+B) Écrire la requête en utilisant l’opérateur EXIST ou NOT EXIST.
+*/
+
+SELECT 
+	LOGEMENT.NO_LOGEMENT, 
+	TYPE_LOGEMENT.CODE_TYPE_LOGEMENT, 
+	TYPE_LOGEMENT.DESCRIPTION AS DESCRIPTION_TYPE_LOGEMENT
+FROM 
+	LOGEMENT 
+		INNER JOIN TYPE_LOGEMENT 
+		ON LOGEMENT.ID_TYPE_LOGEMENT = TYPE_LOGEMENT.ID_TYPE_LOGEMENT
+WHERE 
+	LOGEMENT.ID_VILLAGE = (SELECT 
+							ID_VILLAGE 
+						   FROM 
+							VILLAGE 
+						   WHERE 
+							NOM_VILLAGE = 'Casa-Dali')
+	AND NOT EXISTS ( SELECT 
+						1
+					FROM 
+						SEJOUR
+					WHERE 
+						SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT AND
+						SEJOUR.DATE_SEJOUR BETWEEN '2024-03-17' AND '2024-03-23')
+ORDER BY 
+	LOGEMENT.NO_LOGEMENT
+/*
+NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
+----------- ------------------ -----------------------------------
+8           B2                 Suite 2 personnes
+11          B2                 Suite 2 personnes
+105         D2                 Chalet 4 personnes
+107         D2                 Chalet 4 personnes
+
+(4 lignes affectées)
+*/
