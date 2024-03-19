@@ -61,8 +61,8 @@ SELECT
 	LEFT(FORMAT(AVG(TARIF_NUITEE.TARIF_UNITAIRE), 'C', 'fr-CA'), 10) AS "PRIX_PAR_NUIT_PAR_PERSONNE"
 FROM
 	TARIF_NUITEE
-	INNER JOIN CATEGORIE_VILLAGE
-		ON TARIF_NUITEE.ID_CATEGORIE_VILLAGE = CATEGORIE_VILLAGE.ID_CATEGORIE_VILLAGE
+		RIGHT OUTER JOIN CATEGORIE_VILLAGE
+			ON TARIF_NUITEE.ID_CATEGORIE_VILLAGE = CATEGORIE_VILLAGE.ID_CATEGORIE_VILLAGE
 GROUP BY
 	CATEGORIE_VILLAGE.NO_CATEGORIE,
 	CATEGORIE_VILLAGE.DESCRIPTION
@@ -75,8 +75,9 @@ NO_CATEGORIE DESCRIPTION_CATEGORIE_VILLAGE                      PRIX_PAR_NUIT_PA
 1            tennis, piscine, mini-golf, golf, sauna, garderie  57,27 $
 2            tennis, piscine, golf, sauna                       48,64 $
 3            tennis, piscine, garderie                          43,64 $
+4            spa, ping-pong, activités nautiques                NULL
 
-(3 lignes affectées)
+(4 lignes affectées)
 */
 
 /*
@@ -157,7 +158,7 @@ SELECT
 	RESERVATION.ID_RESERVATION,
 	LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dddd dd MMMM yyyy', 'fr-CA'),25) AS DATE_ARRIVE,
 	VILLAGE.NOM_VILLAGE,
-	COUNT(SEJOUR.ID_SEJOUR) AS DUREE_VACANCE
+	COUNT(DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_VACANCE
 FROM 
 	SEJOUR
 	INNER JOIN RESERVATION
@@ -188,20 +189,20 @@ ORDER BY
 /*
 CLIENT                                                                                          ID_RESERVATION                          DATE_ARRIVE               NOM_VILLAGE     DUREE_VACANCE
 ----------------------------------------------------------------------------------------------- --------------------------------------- ------------------------- --------------- -------------
-Daho Étienne (1)                                                                                1012                                    mercredi 27 décembre 2023 Porto-Nuevo     28
+Daho Étienne (1)                                                                                1012                                    mercredi 27 décembre 2023 Porto-Nuevo     7
 Daho Étienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
-Daho Étienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       10
+Daho Étienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       5
 Fiset Valérie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
 Fiset Valérie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
 Fortin Marine (9)                                                                               1017                                    dimanche 17 mars 2024     Kouros          4
-Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       16
-Plante Josée (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     12
-Plante Josée (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       12
+Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       4
+Plante Josée (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     6
+Plante Josée (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       6
 St-Onge Éric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
 St-Onge Éric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
 St-Onge Éric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
 
-(12 rows affected)
+(12 lignes affectées)
 
 */
 
