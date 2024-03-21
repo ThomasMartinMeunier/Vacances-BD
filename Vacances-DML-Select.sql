@@ -1,6 +1,6 @@
 /* **********************************************************
 	DML Select
-	Schéma MRD:	"Cas Village Vacances"
+	Schï¿½ma MRD:	"Cas Village Vacances"
 	Auteur:		Arthur Tirado et Thomas Martin-Meunier
 ***********************************************************/
 
@@ -8,15 +8,15 @@ USE VILLAGE_VACANCES
 
 /*
 -- 1
-Produire la liste des tarifs des nuitées pour le type de logement D3
-Pour chaque prix, indiquer dans l’ordre :
+Produire la liste des tarifs des nuitï¿½es pour le type de logement D3
+Pour chaque prix, indiquer dans lï¿½ordre :
 - Le code du type de logement,
 - La description du type de logement,
-- Le numéro de la catégorie du village,
-- La description de la catégorie du village,
-- Le prix/nuit/personne en $ canadiens, avec le format d’affichage : 80,00 $ (format
-monétaire canadien français, 2 chiffres après la virgule)
-• Trier par catégorie de village.
+- Le numï¿½ro de la catï¿½gorie du village,
+- La description de la catï¿½gorie du village,
+- Le prix/nuit/personne en $ canadiens, avec le format dï¿½affichage : 80,00 $ (format
+monï¿½taire canadien franï¿½ais, 2 chiffres aprï¿½s la virgule)
+ï¿½ Trier par catï¿½gorie de village.
 */
 SELECT 
 	TYPE_LOGEMENT.CODE_TYPE_LOGEMENT,
@@ -46,13 +46,13 @@ D3                 Chalet 2 personnes                  3            tennis, pisc
 
 /*
 --2
-Produire la liste des catégories de village et calculer le tarif moyen des nuitées pour chacune.
-• Pour chaque catégorie de village, indiquer dans l’ordre :
-- Le numéro de la catégorie du village,
-- La description de la catégorie du village,
-- Le prix moyen par personne et par nuit des logements avec le format d’affichage :
-63,75 $ (format monétaire canadien français, 2 chiffres après la virgule)
-• Trier par catégorie de village
+Produire la liste des catï¿½gories de village et calculer le tarif moyen des nuitï¿½es pour chacune.
+ï¿½ Pour chaque catï¿½gorie de village, indiquer dans lï¿½ordre :
+- Le numï¿½ro de la catï¿½gorie du village,
+- La description de la catï¿½gorie du village,
+- Le prix moyen par personne et par nuit des logements avec le format dï¿½affichage :
+63,75 $ (format monï¿½taire canadien franï¿½ais, 2 chiffres aprï¿½s la virgule)
+ï¿½ Trier par catï¿½gorie de village
 */
 
 SELECT
@@ -61,8 +61,8 @@ SELECT
 	LEFT(FORMAT(AVG(TARIF_NUITEE.TARIF_UNITAIRE), 'C', 'fr-CA'), 10) AS "PRIX_PAR_NUIT_PAR_PERSONNE"
 FROM
 	TARIF_NUITEE
-	INNER JOIN CATEGORIE_VILLAGE
-		ON TARIF_NUITEE.ID_CATEGORIE_VILLAGE = CATEGORIE_VILLAGE.ID_CATEGORIE_VILLAGE
+		RIGHT OUTER JOIN CATEGORIE_VILLAGE
+			ON TARIF_NUITEE.ID_CATEGORIE_VILLAGE = CATEGORIE_VILLAGE.ID_CATEGORIE_VILLAGE
 GROUP BY
 	CATEGORIE_VILLAGE.NO_CATEGORIE,
 	CATEGORIE_VILLAGE.DESCRIPTION
@@ -75,23 +75,24 @@ NO_CATEGORIE DESCRIPTION_CATEGORIE_VILLAGE                      PRIX_PAR_NUIT_PA
 1            tennis, piscine, mini-golf, golf, sauna, garderie  57,27 $
 2            tennis, piscine, golf, sauna                       48,64 $
 3            tennis, piscine, garderie                          43,64 $
+4            spa, ping-pong, activitï¿½s nautiques                NULL
 
-(3 lignes affectées)
+(4ï¿½lignes affectï¿½es)
 */
 
 /*
 --3
-• Produire le calendrier d’occupation du logement 108 du village Casa-Dali pour le mois de mars
+ï¿½ Produire le calendrier dï¿½occupation du logement 108 du village Casa-Dali pour le mois de mars
 2024.
-• Indiquer dans l’ordre :
-- Le numéro du logement,
+ï¿½ Indiquer dans lï¿½ordre :
+- Le numï¿½ro du logement,
 - Le nom du village,
 - Le nom du pays,
 - Le code du type de logement,
 - La description du type de logement,
-- L’identifiant de la réservation,
-- La date du séjour (de la nuit occupée) avec le format d’affichage : 28/03/2024.
-• Trier par date.
+- Lï¿½identifiant de la rï¿½servation,
+- La date du sï¿½jour (de la nuit occupï¿½e) avec le format dï¿½affichage : 28/03/2024.
+ï¿½ Trier par date.
 */
 
 SELECT 
@@ -136,28 +137,28 @@ NO_LOGEMENT NOM_VILLAGE     PAYS       CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEM
 108         Casa-Dali       Espagne    D2                 Chalet 4 personnes                  1005                                    24/03/2024
 108         Casa-Dali       Espagne    D2                 Chalet 4 personnes                  1005                                    25/03/2024
 
-(15 lignes affectées)
+(15ï¿½lignes affectï¿½es)
 */
 
 /*
 --4 
-Pour les clients ayant plus d’une réservation, indiquer le village, la date d’arrivée et le nombre de
-jours de chaque réservation.
-• Indiquer dans l’ordre :
-- Les nom et prénom et identifiant du client, sous le format : Sylvie Monjal (1)
-- L’identifiant de la réservation,
-- La date d’arrivée au village avec le format d’affichage : jeudi 09 mars 2024 (format
-long canadien français de date),
+Pour les clients ayant plus dï¿½une rï¿½servation, indiquer le village, la date dï¿½arrivï¿½e et le nombre de
+jours de chaque rï¿½servation.
+ï¿½ Indiquer dans lï¿½ordre :
+- Les nom et prï¿½nom et identifiant du client, sous le format : Sylvie Monjal (1)
+- Lï¿½identifiant de la rï¿½servation,
+- La date dï¿½arrivï¿½e au village avec le format dï¿½affichage : jeudi 09 mars 2024 (format
+long canadien franï¿½ais de date),
 - Le nom du village vacances,
-- La durée en nombre de jours des vacances.
-• Trier par nom et prénom du client, puis date d’arrivée au village vacances de la réservation
+- La durï¿½e en nombre de jours des vacances.
+ï¿½ Trier par nom et prï¿½nom du client, puis date dï¿½arrivï¿½e au village vacances de la rï¿½servation
 */
 SELECT
 	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
 	RESERVATION.ID_RESERVATION,
 	LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dddd dd MMMM yyyy', 'fr-CA'),25) AS DATE_ARRIVE,
 	VILLAGE.NOM_VILLAGE,
-	COUNT (DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_VACANCE
+	COUNT(DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_VACANCE
 FROM 
 	SEJOUR
 	INNER JOIN RESERVATION
@@ -188,34 +189,34 @@ ORDER BY
 /*
 CLIENT                                                                                          ID_RESERVATION                          DATE_ARRIVE               NOM_VILLAGE     DUREE_VACANCE
 ----------------------------------------------------------------------------------------------- --------------------------------------- ------------------------- --------------- -------------
-Daho Étienne (1)                                                                                1012                                    mercredi 27 décembre 2023 Porto-Nuevo     28
-Daho Étienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
-Daho Étienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       10
-Fiset Valérie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
-Fiset Valérie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
+Daho ï¿½tienne (1)                                                                                1012                                    mercredi 27 dï¿½cembre 2023 Porto-Nuevo     7
+Daho ï¿½tienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
+Daho ï¿½tienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       5
+Fiset Valï¿½rie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
+Fiset Valï¿½rie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
 Fortin Marine (9)                                                                               1017                                    dimanche 17 mars 2024     Kouros          4
-Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       16
-Plante Josée (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     12
-Plante Josée (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       12
-St-Onge Éric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
-St-Onge Éric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
-St-Onge Éric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
+Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       4
+Plante Josï¿½e (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     6
+Plante Josï¿½e (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       6
+St-Onge ï¿½ric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
+St-Onge ï¿½ric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
+St-Onge ï¿½ric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
 
-(12 rows affected)
+(12ï¿½lignes affectï¿½es)
 
 */
 
 /*
 --5
-• Produire la liste des logements du village Casa-Dali disponibles pour toute la période du 17 au 23
+ï¿½ Produire la liste des logements du village Casa-Dali disponibles pour toute la pï¿½riode du 17 au 23
 mars 2024 inclusivement.
-• Pour chaque logement disponible, indiquer dans l’ordre :
-- Le numéro du logement,
+ï¿½ Pour chaque logement disponible, indiquer dans lï¿½ordre :
+- Le numï¿½ro du logement,
 - Le code du type de logement,
 - La description du type de logement.
-• Trier par numéro de logement.
+ï¿½ Trier par numï¿½ro de logement.
 
-A) Écrire la requête en utilisant l’opérateur IN ou NOT IN.
+A) ï¿½crire la requï¿½te en utilisant lï¿½opï¿½rateur IN ou NOT IN.
 */
 
 SELECT 
@@ -250,10 +251,10 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 105         D2                 Chalet 4 personnes
 107         D2                 Chalet 4 personnes
 
-(4 lignes affectées)
+(4ï¿½lignes affectï¿½es)
 
 
-B) Écrire la requête en utilisant l’opérateur EXIST ou NOT EXIST.
+B) ï¿½crire la requï¿½te en utilisant lï¿½opï¿½rateur EXIST ou NOT EXIST.
 */
 
 SELECT 
@@ -288,20 +289,20 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 105         D2                 Chalet 4 personnes
 107         D2                 Chalet 4 personnes
 
-(4 lignes affectées)
+(4ï¿½lignes affectï¿½es)
 */
 
 /* 
 --6
 
-A) Créer la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
-nuitées vendues.
+A) Crï¿½er la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
+nuitï¿½es vendues.
 La vue doit contenir :
-- L’identifiant du village,
+- Lï¿½identifiant du village,
 - Le nom du village.
 - Le pays,
-- Le nombre total de nuitées.
-Faire ensuite un SELECT pour vérifier le contenu de la vue.
+- Le nombre total de nuitï¿½es.
+Faire ensuite un SELECT pour vï¿½rifier le contenu de la vue.
 */
 DROP VIEW IF EXISTS V_NB_NUITEES 
 GO 
@@ -324,12 +325,12 @@ AS
 
 GO
 /*
-B) Écrire la requête suivante en utilisant la vue V_NB_NUITEES. (7 pts)
-• Quel ou quels sont le ou les villages avec le plus grand nombre de nuitées vendues?
-• Indiquer dans l’ordre :
+B) ï¿½crire la requï¿½te suivante en utilisant la vue V_NB_NUITEES. (7 pts)
+ï¿½ Quel ou quels sont le ou les villages avec le plus grand nombre de nuitï¿½es vendues?
+ï¿½ Indiquer dans lï¿½ordre :
 - Le pays,
 - Le nom village,
-- Le nombre de nuitées.
+- Le nombre de nuitï¿½es.
 */
 
 SELECT
@@ -342,19 +343,19 @@ WHERE
 
 /*
 --7
-A) Créer la vue V_RECAPITULATIF_RESERVATION qui contient toutes les réservations.
+A) Crï¿½er la vue V_RECAPITULATIF_RESERVATION qui contient toutes les rï¿½servations.
 La vue doit contenir :
-- L’identifiant de la réservation,
-- La date de réservation,
-- L’identifiant du client,
-- L’identifiant du village,
-- La date de départ de Montréal,
-- La date de retour à Montréal,
-- La durée de la réservation en nombre de jours,
-- Le nombre de personnes concernées par la réservation (nombre de personnes
-hébergées),
-- Le nombre total de nuitées qui seront facturées.
-Faire ensuite un SELECT pour vérifier le contenu de la vue.
+- Lï¿½identifiant de la rï¿½servation,
+- La date de rï¿½servation,
+- Lï¿½identifiant du client,
+- Lï¿½identifiant du village,
+- La date de dï¿½part de Montrï¿½al,
+- La date de retour ï¿½ Montrï¿½al,
+- La durï¿½e de la rï¿½servation en nombre de jours,
+- Le nombre de personnes concernï¿½es par la rï¿½servation (nombre de personnes
+hï¿½bergï¿½es),
+- Le nombre total de nuitï¿½es qui seront facturï¿½es.
+Faire ensuite un SELECT pour vï¿½rifier le contenu de la vue.
 */
 DROP VIEW IF EXISTS V_RECAPITULATIF_RESERVATION 
 GO 
@@ -416,19 +417,19 @@ ID_RESERVATION                          DATE_RESERVATION ID_CLIENT              
 */
 
 /*
-B) Écrire la requête suivante en utilisant la vue V_RECAPITULATIF_RESERVATION. (7 pts)
-• Produire les confirmations pour toutes les réservations effectuées (date de réservation) entre le
-12 et le 20 février 2024 inclusivement.
-• Pour chaque réservation, indiquer dans l’ordre :
-- L’identifiant de la réservation,
-- Les nom, prénom et identifiant du client sous le format : Sylvie Monjal (1)
+B) ï¿½crire la requï¿½te suivante en utilisant la vue V_RECAPITULATIF_RESERVATION. (7 pts)
+ï¿½ Produire les confirmations pour toutes les rï¿½servations effectuï¿½es (date de rï¿½servation) entre le
+12 et le 20 fï¿½vrier 2024 inclusivement.
+ï¿½ Pour chaque rï¿½servation, indiquer dans lï¿½ordre :
+- Lï¿½identifiant de la rï¿½servation,
+- Les nom, prï¿½nom et identifiant du client sous le format : Sylvie Monjal (1)
 - Le nom du village,
-- La date de départ de Montréal avec le format d’affichage : 2024-03-15 (format
-canadien français de date par défaut),
-- La date de retour à Montréal avec le format d’affichage : 2024-03-20,
-- Le nombre de personnes concernées par la réservation (nombre de personnes
-hébergées).
-• Trier par date de réservation, puis par identifiant de réservation.
+- La date de dï¿½part de Montrï¿½al avec le format dï¿½affichage : 2024-03-15 (format
+canadien franï¿½ais de date par dï¿½faut),
+- La date de retour ï¿½ Montrï¿½al avec le format dï¿½affichage : 2024-03-20,
+- Le nombre de personnes concernï¿½es par la rï¿½servation (nombre de personnes
+hï¿½bergï¿½es).
+ï¿½ Trier par date de rï¿½servation, puis par identifiant de rï¿½servation.
 */
 
 SELECT
