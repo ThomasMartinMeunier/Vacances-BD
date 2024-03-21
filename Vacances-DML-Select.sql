@@ -157,7 +157,7 @@ SELECT
 	RESERVATION.ID_RESERVATION,
 	LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dddd dd MMMM yyyy', 'fr-CA'),25) AS DATE_ARRIVE,
 	VILLAGE.NOM_VILLAGE,
-	COUNT(SEJOUR.ID_SEJOUR) AS DUREE_VACANCE
+	COUNT (DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_VACANCE
 FROM 
 	SEJOUR
 	INNER JOIN RESERVATION
@@ -290,3 +290,164 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 
 (4 lignes affectées)
 */
+
+/* 
+--6
+
+A) Créer la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
+nuitées vendues.
+La vue doit contenir :
+- L’identifiant du village,
+- Le nom du village.
+- Le pays,
+- Le nombre total de nuitées.
+Faire ensuite un SELECT pour vérifier le contenu de la vue.
+*/
+DROP VIEW IF EXISTS V_NB_NUITEES 
+GO 
+CREATE VIEW V_NB_NUITEES 
+AS
+	SELECT
+		VILLAGE.ID_VILLAGE,
+		VILLAGE.NOM_VILLAGE,
+		VILLAGE.PAYS,
+		COUNT(SEJOUR.DATE_SEJOUR)*SEJOUR.NB_PERSONNES AS NOMBRE_NUITEE
+	FROM VILLAGE
+		LEFT OUTER JOIN RESERVATION
+			ON VILLAGE.ID_VILLAGE = RESERVATION.ID_VILLAGE
+		LEFT OUTER JOIN SEJOUR
+			ON RESERVATION.ID_RESERVATION = SEJOUR.ID_RESERVATION
+	GROUP BY
+		VILLAGE.ID_VILLAGE,
+		VILLAGE.NOM_VILLAGE,
+		VILLAGE.PAYS
+
+GO
+/*
+B) Écrire la requête suivante en utilisant la vue V_NB_NUITEES. (7 pts)
+• Quel ou quels sont le ou les villages avec le plus grand nombre de nuitées vendues?
+• Indiquer dans l’ordre :
+- Le pays,
+- Le nom village,
+- Le nombre de nuitées.
+*/
+
+SELECT
+	V_NB_NUITEES.PAYS,
+	V_NB_NUITEES.NOM_VILLAGE,
+	V_NB_NUITEES.NOMBRE_NUITEE
+FROM V_NB_NUITEES
+WHERE 
+	V_NB_NUITEES.NOMBRE_NUITEE IN (SELECT MAX(NOMBRE_NUITEE) FROM V_NB_NUITEES)
+
+/*
+--7
+A) Créer la vue V_RECAPITULATIF_RESERVATION qui contient toutes les réservations.
+La vue doit contenir :
+- L’identifiant de la réservation,
+- La date de réservation,
+- L’identifiant du client,
+- L’identifiant du village,
+- La date de départ de Montréal,
+- La date de retour à Montréal,
+- La durée de la réservation en nombre de jours,
+- Le nombre de personnes concernées par la réservation (nombre de personnes
+hébergées),
+- Le nombre total de nuitées qui seront facturées.
+Faire ensuite un SELECT pour vérifier le contenu de la vue.
+*/
+DROP VIEW IF EXISTS V_RECAPITULATIF_RESERVATION 
+GO 
+CREATE VIEW V_RECAPITULATIF_RESERVATION 
+AS
+	SELECT
+		RESERVATION.ID_RESERVATION,
+		LEFT(FORMAT(RESERVATION.DATE_RESERVATION, 'dd/MM/yyyy'), 10) AS DATE_RESERVATION,
+		RESERVATION.ID_CLIENT,
+		RESERVATION.ID_VILLAGE,
+		LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dd/MM/yyyy'), 10) AS DATE_DEPART_MONTREAL,
+		LEFT(FORMAT(MAX(SEJOUR.DATE_SEJOUR)+1, 'dd/MM/yyyy'), 10) AS DATE_RETOUR_MONTREAL,
+		COUNT(DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_RESERVATION,
+		SEJOUR.NB_PERSONNES,
+		COUNT(SEJOUR.DATE_SEJOUR)*SEJOUR.NB_PERSONNES AS NUITES_FACTUREES
+	FROM RESERVATION
+		INNER JOIN SEJOUR
+		ON RESERVATION.ID_RESERVATION = SEJOUR.ID_RESERVATION
+	GROUP BY
+		RESERVATION.ID_RESERVATION,
+		RESERVATION.DATE_RESERVATION,
+		RESERVATION.ID_CLIENT,
+		RESERVATION.ID_VILLAGE,
+		SEJOUR.NB_PERSONNES
+GO
+
+SELECT * FROM V_RECAPITULATIF_RESERVATION
+
+/*
+ID_RESERVATION                          DATE_RESERVATION ID_CLIENT                               ID_VILLAGE                              DATE_DEPART_MONTREAL DATE_RETOUR_MONTREAL DUREE_RESERVATION NB_PERSONNES NUITES_FACTUREES
+--------------------------------------- ---------------- --------------------------------------- --------------------------------------- -------------------- -------------------- ----------------- ------------ ----------------
+1000                                    12/02/2024       1                                       1                                       15/03/2024           20/03/2024           5                 2            10
+1000                                    12/02/2024       1                                       1                                       15/03/2024           20/03/2024           5                 4            20
+1001                                    13/02/2024       8                                       1                                       13/03/2024           19/03/2024           6                 2            24
+1002                                    15/02/2024       7                                       1                                       09/03/2024           13/03/2024           4                 3            12
+1003                                    15/02/2024       7                                       1                                       11/03/2025           15/03/2025           4                 3            12
+1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 2            42
+1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 4            28
+1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 5            35
+1005                                    19/02/2024       5                                       1                                       20/03/2024           26/03/2024           6                 4            24
+1005                                    19/02/2024       5                                       1                                       20/03/2024           26/03/2024           6                 5            30
+1006                                    31/01/2024       12                                      1                                       06/03/2024           10/03/2024           4                 2            8
+1007                                    12/12/2023       9                                       1                                       26/03/2024           30/03/2024           4                 2            24
+1007                                    12/12/2023       9                                       1                                       26/03/2024           30/03/2024           4                 4            16
+1008                                    11/01/2023       6                                       1                                       26/02/2024           29/02/2024           3                 4            60
+1009                                    19/02/2024       7                                       1                                       31/03/2024           06/04/2024           6                 6            36
+1010                                    31/01/2024       12                                      1                                       03/04/2024           05/04/2024           2                 2            4
+1011                                    02/01/2024       14                                      1                                       24/02/2024           03/04/2024           39                2            78
+1012                                    15/09/2023       1                                       2                                       27/12/2023           03/01/2024           7                 2            56
+1013                                    17/02/2024       3                                       2                                       02/03/2025           07/03/2025           5                 2            40
+1014                                    28/02/2024       1                                       2                                       07/03/2024           10/03/2024           3                 2            6
+1015                                    28/02/2024       8                                       2                                       09/03/2024           15/03/2024           6                 2            24
+1016                                    19/02/2024       4                                       2                                       01/03/2024           02/03/2024           1                 3            3
+1017                                    24/02/2024       9                                       4                                       17/03/2024           21/03/2024           4                 1            4
+1018                                    25/02/2024       13                                      4                                       18/03/2024           21/03/2024           3                 1            3
+1018                                    25/02/2024       13                                      4                                       18/03/2024           21/03/2024           3                 4            12
+
+(25 rows affected)
+*/
+
+/*
+B) Écrire la requête suivante en utilisant la vue V_RECAPITULATIF_RESERVATION. (7 pts)
+• Produire les confirmations pour toutes les réservations effectuées (date de réservation) entre le
+12 et le 20 février 2024 inclusivement.
+• Pour chaque réservation, indiquer dans l’ordre :
+- L’identifiant de la réservation,
+- Les nom, prénom et identifiant du client sous le format : Sylvie Monjal (1)
+- Le nom du village,
+- La date de départ de Montréal avec le format d’affichage : 2024-03-15 (format
+canadien français de date par défaut),
+- La date de retour à Montréal avec le format d’affichage : 2024-03-20,
+- Le nombre de personnes concernées par la réservation (nombre de personnes
+hébergées).
+• Trier par date de réservation, puis par identifiant de réservation.
+*/
+
+SELECT
+	V_RECAPITULATIF_RESERVATION.ID_RESERVATION,
+	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
+	VILLAGE.NOM_VILLAGE,
+	V_RECAPITULATIF_RESERVATION.DATE_DEPART_MONTREAL,
+	V_RECAPITULATIF_RESERVATION.DATE_RETOUR_MONTREAL,
+	V_RECAPITULATIF_RESERVATION.NB_PERSONNES
+
+FROM 
+	V_RECAPITULATIF_RESERVATION
+		INNER JOIN CLIENT
+			ON V_RECAPITULATIF_RESERVATION.ID_CLIENT = CLIENT.ID_CLIENT
+		INNER JOIN VILLAGE
+			ON V_RECAPITULATIF_RESERVATION.ID_VILLAGE = VILLAGE.ID_VILLAGE
+WHERE
+	V_RECAPITULATIF_RESERVATION.DATE_RESERVATION BETWEEN '2024-02-12' AND '2024-02-20'
+
+ORDER BY 
+	V_RECAPITULATIF_RESERVATION.DATE_RESERVATION,
+	V_RECAPITULATIF_RESERVATION.ID_RESERVATION
