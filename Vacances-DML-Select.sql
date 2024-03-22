@@ -506,9 +506,33 @@ WHERE LOGEMENT.NO_LOGEMENT IN (11, 19)
     AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
     AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
 
+/*
+ID_SEJOUR                               DATE_SEJOUR             ID_LOGEMENT                             ID_RESERVATION                          NB_PERSONNES ID_LOGEMENT                             NO_LOGEMENT ID_VILLAGE                              ID_TYPE_LOGEMENT                        COMMENTAIRE
+--------------------------------------- ----------------------- --------------------------------------- --------------------------------------- ------------ --------------------------------------- ----------- --------------------------------------- --------------------------------------- -----------------------------------------------------------------------------------------------------------------------------
+12                                      2024-03-13 00:00:00.000 5                                       1001                                    2            5                                       19          1                                       6                                       NULL
+14                                      2024-03-14 00:00:00.000 5                                       1001                                    2            5                                       19          1                                       6                                       NULL
+16                                      2024-03-15 00:00:00.000 5                                       1001                                    2            5                                       19          1                                       6                                       NULL
+78                                      2024-03-06 00:00:00.000 5                                       1006                                    2            5                                       19          1                                       6                                       NULL
+79                                      2024-03-07 00:00:00.000 5                                       1006                                    2            5                                       19          1                                       6                                       NULL
+80                                      2024-03-08 00:00:00.000 5                                       1006                                    2            5                                       19          1                                       6                                       NULL
+81                                      2024-03-09 00:00:00.000 5                                       1006                                    2            5                                       19          1                                       6                                       NULL
+
+(7 lignes affectées)
+*/
+
 -- Requête pour déplacer les séjours
 UPDATE SEJOUR
-SET SEJOUR.ID_LOGEMENT = 8
+SET SEJOUR.ID_LOGEMENT = (SELECT 
+							ID_LOGEMENT 
+						  FROM 
+							LOGEMENT 
+						  WHERE 
+							NO_LOGEMENT = 8 AND ID_VILLAGE = (SELECT 
+																ID_VILLAGE 
+															   FROM 
+																VILLAGE 
+															   WHERE 
+																NOM_VILLAGE = 'Casa-Dali'))
 FROM SEJOUR
 	INNER JOIN LOGEMENT
 		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
@@ -527,4 +551,18 @@ WHERE LOGEMENT.NO_LOGEMENT IN (8)
     AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
     AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
 ROLLBACK TRANSACTION;
+
+/*
+ID_SEJOUR                               DATE_SEJOUR             ID_LOGEMENT                             ID_RESERVATION                          NB_PERSONNES ID_LOGEMENT                             NO_LOGEMENT ID_VILLAGE                              ID_TYPE_LOGEMENT                        COMMENTAIRE
+--------------------------------------- ----------------------- --------------------------------------- --------------------------------------- ------------ --------------------------------------- ----------- --------------------------------------- --------------------------------------- -----------------------------------------------------------------------------------------------------------------------------
+12                                      2024-03-13 00:00:00.000 1                                       1001                                    2            1                                       8           1                                       6                                       NULL
+14                                      2024-03-14 00:00:00.000 1                                       1001                                    2            1                                       8           1                                       6                                       NULL
+16                                      2024-03-15 00:00:00.000 1                                       1001                                    2            1                                       8           1                                       6                                       NULL
+78                                      2024-03-06 00:00:00.000 1                                       1006                                    2            1                                       8           1                                       6                                       NULL
+79                                      2024-03-07 00:00:00.000 1                                       1006                                    2            1                                       8           1                                       6                                       NULL
+80                                      2024-03-08 00:00:00.000 1                                       1006                                    2            1                                       8           1                                       6                                       NULL
+81                                      2024-03-09 00:00:00.000 1                                       1006                                    2            1                                       8           1                                       6                                       NULL
+
+(7 lignes affectées)
+*/
 
