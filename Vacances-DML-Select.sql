@@ -8,15 +8,15 @@ USE VILLAGE_VACANCES
 
 /*
 -- 1
-Produire la liste des tarifs des nuit�es pour le type de logement D3
-Pour chaque prix, indiquer dans l�ordre :
+Produire la liste des tarifs des nuits pour le type de logement D3
+Pour chaque prix, indiquer dans l'ordre :
 - Le code du type de logement,
 - La description du type de logement,
-- Le num�ro de la cat�gorie du village,
-- La description de la cat�gorie du village,
-- Le prix/nuit/personne en $ canadiens, avec le format d�affichage : 80,00 $ (format
-mon�taire canadien fran�ais, 2 chiffres apr�s la virgule)
-� Trier par cat�gorie de village.
+- Le numéro de la catégorie du village,
+- La description de la catégorie du village,
+- Le prix/nuit/personne en $ canadiens, avec le format d'affichage : 80,00 $ (format
+monétaire canadien français, 2 chiffres après la virgule)
+- Trier par catégorie de village.
 */
 SELECT 
 	TYPE_LOGEMENT.CODE_TYPE_LOGEMENT,
@@ -46,13 +46,13 @@ D3                 Chalet 2 personnes                  3            tennis, pisc
 
 /*
 --2
-Produire la liste des cat�gories de village et calculer le tarif moyen des nuit�es pour chacune.
-� Pour chaque cat�gorie de village, indiquer dans l�ordre :
-- Le num�ro de la cat�gorie du village,
-- La description de la cat�gorie du village,
-- Le prix moyen par personne et par nuit des logements avec le format d�affichage :
-63,75 $ (format mon�taire canadien fran�ais, 2 chiffres apr�s la virgule)
-� Trier par cat�gorie de village
+Produire la liste des catégories de village et calculer le tarif moyen des nuits pour chacune.
+- Pour chaque catégorie de village, indiquer dans l'ordre :
+- Le numéro de la catégorie du village,
+- La description de la catégorie du village,
+- Le prix moyen par personne et par nuit des logements avec le format d'affichage :
+63,75 $ (format monétaire canadien français, 2 chiffres après la virgule)
+- Trier par catégorie de village
 */
 
 SELECT
@@ -82,17 +82,17 @@ NO_CATEGORIE DESCRIPTION_CATEGORIE_VILLAGE                      PRIX_PAR_NUIT_PA
 
 /*
 --3
-� Produire le calendrier d�occupation du logement 108 du village Casa-Dali pour le mois de mars
+Produire le calendrier d'occupation du logement 108 du village Casa-Dali pour le mois de mars
 2024.
-� Indiquer dans l�ordre :
-- Le num�ro du logement,
+- Indiquer dans l'ordre :
+- Le numéro du logement,
 - Le nom du village,
 - Le nom du pays,
 - Le code du type de logement,
 - La description du type de logement,
-- L�identifiant de la r�servation,
-- La date du s�jour (de la nuit occup�e) avec le format d�affichage : 28/03/2024.
-� Trier par date.
+- L'identifiant de la réservation,
+- La date du séjour (de la nuit occupée) avec le format d'affichage : 28/03/2024.
+- Trier par date.
 */
 
 SELECT 
@@ -142,16 +142,16 @@ NO_LOGEMENT NOM_VILLAGE     PAYS       CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEM
 
 /*
 --4 
-Pour les clients ayant plus d�une r�servation, indiquer le village, la date d�arriv�e et le nombre de
-jours de chaque r�servation.
-� Indiquer dans l�ordre :
-- Les nom et pr�nom et identifiant du client, sous le format : Sylvie Monjal (1)
-- L�identifiant de la r�servation,
-- La date d�arriv�e au village avec le format d�affichage : jeudi 09 mars 2024 (format
-long canadien fran�ais de date),
+Pour les clients ayant plus d'une réservation, indiquer le village, la date d'arrivée et le nombre de
+jours de chaque réservation.
+- Indiquer dans l'ordre :
+- Les nom et prénom et identifiant du client, sous le format : Sylvie Monjal (1)
+- L'identifiant de la réservation,
+- La date d'arrivée au village avec le format d'affichage : jeudi 09 mars 2024 (format
+long canadien français de date),
 - Le nom du village vacances,
-- La dur�e en nombre de jours des vacances.
-� Trier par nom et pr�nom du client, puis date d�arriv�e au village vacances de la r�servation
+- La durée en nombre de jours des vacances.
+- Trier par nom et prénom du client, puis date d'arrivée au village vacances de la réservation
 */
 SELECT
 	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
@@ -208,15 +208,15 @@ St-Onge �ric (7)                                                              
 
 /*
 --5
-� Produire la liste des logements du village Casa-Dali disponibles pour toute la p�riode du 17 au 23
+Produire la liste des logements du village Casa-Dali disponibles pour toute la période du 17 au 23
 mars 2024 inclusivement.
-� Pour chaque logement disponible, indiquer dans l�ordre :
-- Le num�ro du logement,
+Pour chaque logement disponible, indiquer dans l’ordre :
+- Le numéro du logement,
 - Le code du type de logement,
 - La description du type de logement.
-� Trier par num�ro de logement.
+Trier par numéro de logement.
 
-A) �crire la requ�te en utilisant l�op�rateur IN ou NOT IN.
+A) Écrire la requête en utilisant l’opérateur IN ou NOT IN.
 */
 
 SELECT 
@@ -254,7 +254,7 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 (4�lignes affect�es)
 
 
-B) �crire la requ�te en utilisant l�op�rateur EXIST ou NOT EXIST.
+B) Écrire la requête en utilisant l’opérateur EXISTS ou NOT EXISTS.
 */
 
 SELECT 
@@ -292,7 +292,7 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 (4�lignes affect�es)
 */
 
-/* 
+/*  
 --6
 
 A) Cr�er la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
@@ -321,9 +321,28 @@ AS
 	GROUP BY
 		VILLAGE.ID_VILLAGE,
 		VILLAGE.NOM_VILLAGE,
-		VILLAGE.PAYS
-
+		VILLAGE.PAYS,
+		SEJOUR.NB_PERSONNES
 GO
+SELECT * FROM V_NB_NUITEES
+/*
+ID_VILLAGE                              NOM_VILLAGE     PAYS       NOMBRE_NUITEE
+--------------------------------------- --------------- ---------- -------------
+3                                       Cuidad Blanca   Espagne    NULL
+4                                       Kouros          Grèce      7
+1                                       Casa-Dali       Espagne    190
+2                                       Porto-Nuevo     Espagne    126
+1                                       Casa-Dali       Espagne    24
+2                                       Porto-Nuevo     Espagne    3
+1                                       Casa-Dali       Espagne    148
+4                                       Kouros          Grèce      12
+1                                       Casa-Dali       Espagne    65
+1                                       Casa-Dali       Espagne    36
+Warning: Null value is eliminated by an aggregate or other SET operation.
+
+(10 rows affected)
+*/
+
 /*
 B) �crire la requ�te suivante en utilisant la vue V_NB_NUITEES. (7 pts)
 � Quel ou quels sont le ou les villages avec le plus grand nombre de nuit�es vendues?
@@ -363,11 +382,11 @@ CREATE VIEW V_RECAPITULATIF_RESERVATION
 AS
 	SELECT
 		RESERVATION.ID_RESERVATION,
-		LEFT(FORMAT(RESERVATION.DATE_RESERVATION, 'dd/MM/yyyy'), 10) AS DATE_RESERVATION,
+		RESERVATION.DATE_RESERVATION,
 		RESERVATION.ID_CLIENT,
 		RESERVATION.ID_VILLAGE,
-		LEFT(FORMAT(MIN(SEJOUR.DATE_SEJOUR), 'dd/MM/yyyy'), 10) AS DATE_DEPART_MONTREAL,
-		LEFT(FORMAT(MAX(SEJOUR.DATE_SEJOUR)+1, 'dd/MM/yyyy'), 10) AS DATE_RETOUR_MONTREAL,
+		MIN(SEJOUR.DATE_SEJOUR) AS DATE_DEPART_MONTREAL,
+		MAX(SEJOUR.DATE_SEJOUR) AS DATE_RETOUR_MONTREAL,
 		COUNT(DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_RESERVATION,
 		SEJOUR.NB_PERSONNES,
 		COUNT(SEJOUR.DATE_SEJOUR)*SEJOUR.NB_PERSONNES AS NUITES_FACTUREES
@@ -417,27 +436,27 @@ ID_RESERVATION                          DATE_RESERVATION ID_CLIENT              
 */
 
 /*
-B) �crire la requ�te suivante en utilisant la vue V_RECAPITULATIF_RESERVATION. (7 pts)
-� Produire les confirmations pour toutes les r�servations effectu�es (date de r�servation) entre le
-12 et le 20 f�vrier 2024 inclusivement.
-� Pour chaque r�servation, indiquer dans l�ordre :
-- L�identifiant de la r�servation,
-- Les nom, pr�nom et identifiant du client sous le format : Sylvie Monjal (1)
+B) Écrire la requête suivante en utilisant la vue V_RECAPITULATIF_RESERVATION.
+• Produire les confirmations pour toutes les réservations effectuées (date de réservation) entre le
+12 et le 20 février 2024 inclusivement.
+• Pour chaque réservation, indiquer dans l’ordre :
+- L’identifiant de la réservation,
+- Les nom, prénom et identifiant du client sous le format : Sylvie Monjal (1)
 - Le nom du village,
-- La date de d�part de Montr�al avec le format d�affichage : 2024-03-15 (format
-canadien fran�ais de date par d�faut),
-- La date de retour � Montr�al avec le format d�affichage : 2024-03-20,
-- Le nombre de personnes concern�es par la r�servation (nombre de personnes
-h�berg�es).
-� Trier par date de r�servation, puis par identifiant de r�servation.
+- La date de départ de Montréal avec le format d’affichage : 2024-03-15 (format
+canadien français de date par défaut),
+- La date de retour à Montréal avec le format d’affichage : 2024-03-20,
+- Le nombre de personnes concernées par la réservation (nombre de personnes
+hébergées).
+• Trier par date de réservation, puis par identifiant de réservation.
 */
 
 SELECT
 	V_RECAPITULATIF_RESERVATION.ID_RESERVATION,
-	CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')') AS CLIENT,
+	LEFT(CONCAT(CLIENT.NOM, ' ', CLIENT.PRENOM, ' (',CLIENT.ID_CLIENT ,')'),25) AS CLIENT,
 	VILLAGE.NOM_VILLAGE,
-	V_RECAPITULATIF_RESERVATION.DATE_DEPART_MONTREAL,
-	V_RECAPITULATIF_RESERVATION.DATE_RETOUR_MONTREAL,
+	LEFT(FORMAT(MIN(V_RECAPITULATIF_RESERVATION.DATE_DEPART_MONTREAL), 'yyyy-MM-dd', 'fr-CA'),25) AS DATE_DEPART_MONTREAL,
+	LEFT(FORMAT(MIN(V_RECAPITULATIF_RESERVATION.DATE_RETOUR_MONTREAL), 'yyyy-MM-dd', 'fr-CA'),25) AS DATE_DEPART_MONTREAL,
 	V_RECAPITULATIF_RESERVATION.NB_PERSONNES
 
 FROM 
@@ -448,7 +467,73 @@ FROM
 			ON V_RECAPITULATIF_RESERVATION.ID_VILLAGE = VILLAGE.ID_VILLAGE
 WHERE
 	V_RECAPITULATIF_RESERVATION.DATE_RESERVATION BETWEEN '2024-02-12' AND '2024-02-20'
-
+GROUP BY
+	V_RECAPITULATIF_RESERVATION.ID_RESERVATION,
+	CLIENT.NOM,
+	CLIENT.PRENOM,
+	CLIENT.ID_CLIENT,
+	VILLAGE.NOM_VILLAGE,
+	V_RECAPITULATIF_RESERVATION.DATE_DEPART_MONTREAL,
+	V_RECAPITULATIF_RESERVATION.NB_PERSONNES,
+	V_RECAPITULATIF_RESERVATION.DATE_RESERVATION
 ORDER BY 
 	V_RECAPITULATIF_RESERVATION.DATE_RESERVATION,
 	V_RECAPITULATIF_RESERVATION.ID_RESERVATION
+
+/*
+ID_RESERVATION                          CLIENT                    NOM_VILLAGE     DATE_DEPART_MONTREAL      DATE_DEPART_MONTREAL      NB_PERSONNES
+--------------------------------------- ------------------------- --------------- ------------------------- ------------------------- ------------
+1000                                    Daho Étienne (1)          Casa-Dali       2024-03-15                2024-03-19                2
+1000                                    Daho Étienne (1)          Casa-Dali       2024-03-15                2024-03-19                4
+1001                                    Plante Josée (8)          Casa-Dali       2024-03-13                2024-03-18                2
+1002                                    St-Onge Éric (7)          Casa-Dali       2024-03-09                2024-03-12                3
+1003                                    St-Onge Éric (7)          Casa-Dali       2025-03-11                2025-03-14                3
+1013                                    Gosselin Yvonne (3)       Porto-Nuevo     2025-03-02                2025-03-06                2
+1005                                    Paré Marine (5)           Casa-Dali       2024-03-20                2024-03-25                4
+1005                                    Paré Marine (5)           Casa-Dali       2024-03-20                2024-03-25                5
+1009                                    St-Onge Éric (7)          Casa-Dali       2024-03-31                2024-04-05                6
+1016                                    Dupuis Pierre (4)         Porto-Nuevo     2024-03-01                2024-03-01                3
+
+(10 rows affected)
+*/
+
+/*
+Question 8
+• Déplacer tous les séjours de 2 personnes (uniquement) des suites 11 et 19 (numéro de logement)
+du village Casa-Dali dans la suite 8 (numéro de logement) du village, pour la période du 1 au 15
+mars 2024. On considère que la disponibilité du logement 8 est assurée pour ces dates.
+• Faites un SELECT avant et après votre requête pour démontrer qu’elle a bien fonctionné.
+*/
+-- SELECT avant 
+BEGIN TRANSACTION;
+
+SELECT *
+FROM SEJOUR
+	INNER JOIN LOGEMENT
+		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
+WHERE SEJOUR.ID_LOGEMENT IN (11, 19)
+    AND SEJOUR.NB_PERSONNES = 2
+    AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
+    AND LOGEMENT.ID_LOGEMENT = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
+
+-- Requête pour déplacer les séjours
+UPDATE SEJOUR
+SET SEJOUR.ID_LOGEMENT = 8
+FROM SEJOUR
+	INNER JOIN LOGEMENT
+		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
+WHERE SEJOUR.ID_LOGEMENT IN (11, 19) 
+    AND SEJOUR.NB_PERSONNES = 2 
+    AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
+    AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
+
+-- SELECT après 
+SELECT *
+FROM SEJOUR
+	INNER JOIN LOGEMENT
+		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
+WHERE SEJOUR.ID_LOGEMENT IN (11, 19)
+    AND SEJOUR.NB_PERSONNES = 2
+    AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
+    AND LOGEMENT.ID_LOGEMENT = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
+ROLLBACK TRANSACTION;
