@@ -218,7 +218,6 @@ Trier par numéro de logement.
 
 A) Écrire la requête en utilisant l’opérateur IN ou NOT IN.
 */
-
 SELECT 
 	LOGEMENT.NO_LOGEMENT, 
 	TYPE_LOGEMENT.CODE_TYPE_LOGEMENT, 
@@ -303,6 +302,7 @@ La vue doit contenir :
 - Le nombre total de nuitées.
 Faire ensuite un SELECT pour vérifier le contenu de la vue.
 */
+
 DROP VIEW IF EXISTS V_NB_NUITEES 
 GO 
 CREATE VIEW V_NB_NUITEES 
@@ -311,7 +311,7 @@ AS
 		VILLAGE.ID_VILLAGE,
 		VILLAGE.NOM_VILLAGE,
 		VILLAGE.PAYS,
-		COUNT(SEJOUR.DATE_SEJOUR)*SEJOUR.NB_PERSONNES AS NOMBRE_NUITEE
+		ISNULL(SUM(SEJOUR.NB_PERSONNES), 0) AS NOMBRE_NUITEE
 	FROM VILLAGE
 		LEFT OUTER JOIN RESERVATION
 			ON VILLAGE.ID_VILLAGE = RESERVATION.ID_VILLAGE
@@ -320,32 +320,24 @@ AS
 	GROUP BY
 		VILLAGE.ID_VILLAGE,
 		VILLAGE.NOM_VILLAGE,
-		VILLAGE.PAYS,
-		SEJOUR.NB_PERSONNES
+		VILLAGE.PAYS
 GO
 SELECT * FROM V_NB_NUITEES
 /*
 ID_VILLAGE                              NOM_VILLAGE     PAYS       NOMBRE_NUITEE
 --------------------------------------- --------------- ---------- -------------
-3                                       Cuidad Blanca   Espagne    NULL
-4                                       Kouros          Grèce      7
-1                                       Casa-Dali       Espagne    190
-2                                       Porto-Nuevo     Espagne    126
-1                                       Casa-Dali       Espagne    24
-2                                       Porto-Nuevo     Espagne    3
-1                                       Casa-Dali       Espagne    148
-4                                       Kouros          Grèce      12
-1                                       Casa-Dali       Espagne    65
-1                                       Casa-Dali       Espagne    36
-Warning: Null value is eliminated by an aggregate or other SET operation.
+1                                       Casa-Dali       Espagne    463
+2                                       Porto-Nuevo     Espagne    129
+3                                       Cuidad Blanca   Espagne    0
+4                                       Kouros          Grèce      19
 
-(10 rows affected)
+(4 rows affected)
 */
 
 /*
 B) Écrire la requête suivante en utilisant la vue V_NB_NUITEES. (7 pts)
-� Quel ou quels sont le ou les villages avec le plus grand nombre de nuitées vendues?
-� Indiquer dans l'ordre :
+- Quel ou quels sont le ou les villages avec le plus grand nombre de nuitées vendues?
+- Indiquer dans l'ordre :
 - Le pays,
 - Le nom village,
 - Le nombre de nuitées.
@@ -362,9 +354,9 @@ WHERE
 /*
 PAYS       NOM_VILLAGE     NOMBRE_NUITEE
 ---------- --------------- -------------
-Espagne    Casa-Dali       190
+Espagne    Casa-Dali       463
 
-(1 ligne affectée)
+(1 row affected)
 */
 
 /*
@@ -392,11 +384,11 @@ AS
 		RESERVATION.DATE_RESERVATION,
 		RESERVATION.ID_CLIENT,
 		RESERVATION.ID_VILLAGE,
-		MIN(SEJOUR.DATE_SEJOUR) AS DATE_DEPART_MONTREAL,
-		MAX(SEJOUR.DATE_SEJOUR) AS DATE_RETOUR_MONTREAL,
+		CAST(MIN(SEJOUR.DATE_SEJOUR)AS DATE) AS DATE_DEPART_MONTREAL,
+		CAST(MAX(SEJOUR.DATE_SEJOUR) AS DATE) AS DATE_RETOUR_MONTREAL,
 		COUNT(DISTINCT SEJOUR.DATE_SEJOUR) AS DUREE_RESERVATION,
-		SEJOUR.NB_PERSONNES,
-		COUNT(SEJOUR.DATE_SEJOUR)*SEJOUR.NB_PERSONNES AS NUITES_FACTUREES
+		MAX(SEJOUR.NB_PERSONNES) AS NB_PERSONNES,
+		ISNULL(SUM(SEJOUR.NB_PERSONNES), 0) AS NUITEES_FACTURES
 	FROM RESERVATION
 		INNER JOIN SEJOUR
 		ON RESERVATION.ID_RESERVATION = SEJOUR.ID_RESERVATION
@@ -404,42 +396,35 @@ AS
 		RESERVATION.ID_RESERVATION,
 		RESERVATION.DATE_RESERVATION,
 		RESERVATION.ID_CLIENT,
-		RESERVATION.ID_VILLAGE,
-		SEJOUR.NB_PERSONNES
+		RESERVATION.ID_VILLAGE
 GO
 
 SELECT * FROM V_RECAPITULATIF_RESERVATION
 
 /*
-ID_RESERVATION                          DATE_RESERVATION ID_CLIENT                               ID_VILLAGE                              DATE_DEPART_MONTREAL DATE_RETOUR_MONTREAL DUREE_RESERVATION NB_PERSONNES NUITES_FACTUREES
---------------------------------------- ---------------- --------------------------------------- --------------------------------------- -------------------- -------------------- ----------------- ------------ ----------------
-1000                                    12/02/2024       1                                       1                                       15/03/2024           20/03/2024           5                 2            10
-1000                                    12/02/2024       1                                       1                                       15/03/2024           20/03/2024           5                 4            20
-1001                                    13/02/2024       8                                       1                                       13/03/2024           19/03/2024           6                 2            24
-1002                                    15/02/2024       7                                       1                                       09/03/2024           13/03/2024           4                 3            12
-1003                                    15/02/2024       7                                       1                                       11/03/2025           15/03/2025           4                 3            12
-1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 2            42
-1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 4            28
-1004                                    24/02/2024       2                                       1                                       17/03/2024           24/03/2024           7                 5            35
-1005                                    19/02/2024       5                                       1                                       20/03/2024           26/03/2024           6                 4            24
-1005                                    19/02/2024       5                                       1                                       20/03/2024           26/03/2024           6                 5            30
-1006                                    31/01/2024       12                                      1                                       06/03/2024           10/03/2024           4                 2            8
-1007                                    12/12/2023       9                                       1                                       26/03/2024           30/03/2024           4                 2            24
-1007                                    12/12/2023       9                                       1                                       26/03/2024           30/03/2024           4                 4            16
-1008                                    11/01/2023       6                                       1                                       26/02/2024           29/02/2024           3                 4            60
-1009                                    19/02/2024       7                                       1                                       31/03/2024           06/04/2024           6                 6            36
-1010                                    31/01/2024       12                                      1                                       03/04/2024           05/04/2024           2                 2            4
-1011                                    02/01/2024       14                                      1                                       24/02/2024           03/04/2024           39                2            78
-1012                                    15/09/2023       1                                       2                                       27/12/2023           03/01/2024           7                 2            56
-1013                                    17/02/2024       3                                       2                                       02/03/2025           07/03/2025           5                 2            40
-1014                                    28/02/2024       1                                       2                                       07/03/2024           10/03/2024           3                 2            6
-1015                                    28/02/2024       8                                       2                                       09/03/2024           15/03/2024           6                 2            24
-1016                                    19/02/2024       4                                       2                                       01/03/2024           02/03/2024           1                 3            3
-1017                                    24/02/2024       9                                       4                                       17/03/2024           21/03/2024           4                 1            4
-1018                                    25/02/2024       13                                      4                                       18/03/2024           21/03/2024           3                 1            3
-1018                                    25/02/2024       13                                      4                                       18/03/2024           21/03/2024           3                 4            12
+ID_RESERVATION                          DATE_RESERVATION        ID_CLIENT                               ID_VILLAGE                              DATE_DEPART_MONTREAL DATE_RETOUR_MONTREAL DUREE_RESERVATION NB_PERSONNES NUITEES_FACTURES
+--------------------------------------- ----------------------- --------------------------------------- --------------------------------------- -------------------- -------------------- ----------------- ------------ ----------------
+1000                                    2024-02-12 00:00:00.000 1                                       1                                       2024-03-15           2024-03-19           5                 4            30
+1001                                    2024-02-13 00:00:00.000 8                                       1                                       2024-03-13           2024-03-18           6                 2            24
+1002                                    2024-02-15 00:00:00.000 7                                       1                                       2024-03-09           2024-03-12           4                 3            12
+1003                                    2024-02-15 00:00:00.000 7                                       1                                       2025-03-11           2025-03-14           4                 3            12
+1004                                    2024-02-24 00:00:00.000 2                                       1                                       2024-03-17           2024-03-23           7                 5            105
+1005                                    2024-02-19 00:00:00.000 5                                       1                                       2024-03-20           2024-03-25           6                 5            54
+1006                                    2024-01-31 00:00:00.000 12                                      1                                       2024-03-06           2024-03-09           4                 2            8
+1007                                    2023-12-12 00:00:00.000 9                                       1                                       2024-03-26           2024-03-29           4                 4            40
+1008                                    2023-01-11 00:00:00.000 6                                       1                                       2024-02-26           2024-02-28           3                 4            60
+1009                                    2024-02-19 00:00:00.000 7                                       1                                       2024-03-31           2024-04-05           6                 6            36
+1010                                    2024-01-31 00:00:00.000 12                                      1                                       2024-04-03           2024-04-04           2                 2            4
+1011                                    2024-01-02 00:00:00.000 14                                      1                                       2024-02-24           2024-04-02           39                2            78
+1012                                    2023-09-15 00:00:00.000 1                                       2                                       2023-12-27           2024-01-02           7                 2            56
+1013                                    2024-02-17 00:00:00.000 3                                       2                                       2025-03-02           2025-03-06           5                 2            40
+1014                                    2024-02-28 00:00:00.000 1                                       2                                       2024-03-07           2024-03-09           3                 2            6
+1015                                    2024-02-28 00:00:00.000 8                                       2                                       2024-03-09           2024-03-14           6                 2            24
+1016                                    2024-02-19 00:00:00.000 4                                       2                                       2024-03-01           2024-03-01           1                 3            3
+1017                                    2024-02-24 00:00:00.000 9                                       4                                       2024-03-17           2024-03-20           4                 1            4
+1018                                    2024-02-25 00:00:00.000 13                                      4                                       2024-03-18           2024-03-20           3                 4            15
 
-(25 rows affected)
+(19 rows affected)
 */
 
 /*
@@ -490,18 +475,16 @@ ORDER BY
 /*
 ID_RESERVATION                          CLIENT                    NOM_VILLAGE     DATE_DEPART_MONTREAL      DATE_DEPART_MONTREAL      NB_PERSONNES
 --------------------------------------- ------------------------- --------------- ------------------------- ------------------------- ------------
-1000                                    Daho Étienne (1)          Casa-Dali       2024-03-15                2024-03-19                2
 1000                                    Daho Étienne (1)          Casa-Dali       2024-03-15                2024-03-19                4
 1001                                    Plante Josée (8)          Casa-Dali       2024-03-13                2024-03-18                2
 1002                                    St-Onge Éric (7)          Casa-Dali       2024-03-09                2024-03-12                3
 1003                                    St-Onge Éric (7)          Casa-Dali       2025-03-11                2025-03-14                3
 1013                                    Gosselin Yvonne (3)       Porto-Nuevo     2025-03-02                2025-03-06                2
-1005                                    Paré Marine (5)           Casa-Dali       2024-03-20                2024-03-25                4
 1005                                    Paré Marine (5)           Casa-Dali       2024-03-20                2024-03-25                5
 1009                                    St-Onge Éric (7)          Casa-Dali       2024-03-31                2024-04-05                6
 1016                                    Dupuis Pierre (4)         Porto-Nuevo     2024-03-01                2024-03-01                3
 
-(10 rows affected)
+(8 rows affected)
 */
 
 /*
@@ -518,10 +501,10 @@ SELECT *
 FROM SEJOUR
 	INNER JOIN LOGEMENT
 		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
-WHERE SEJOUR.ID_LOGEMENT IN (11, 19)
+WHERE LOGEMENT.NO_LOGEMENT IN (11, 19)
     AND SEJOUR.NB_PERSONNES = 2
     AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
-    AND LOGEMENT.ID_LOGEMENT = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
+    AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
 
 -- Requête pour déplacer les séjours
 UPDATE SEJOUR
@@ -529,8 +512,8 @@ SET SEJOUR.ID_LOGEMENT = 8
 FROM SEJOUR
 	INNER JOIN LOGEMENT
 		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
-WHERE SEJOUR.ID_LOGEMENT IN (11, 19) 
-    AND SEJOUR.NB_PERSONNES = 2 
+WHERE LOGEMENT.NO_LOGEMENT IN (11, 19)
+    AND SEJOUR.NB_PERSONNES = 2
     AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
     AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
 
@@ -539,8 +522,9 @@ SELECT *
 FROM SEJOUR
 	INNER JOIN LOGEMENT
 		ON SEJOUR.ID_LOGEMENT = LOGEMENT.ID_LOGEMENT
-WHERE SEJOUR.ID_LOGEMENT IN (11, 19)
+WHERE LOGEMENT.NO_LOGEMENT IN (8)
     AND SEJOUR.NB_PERSONNES = 2
     AND SEJOUR.DATE_SEJOUR BETWEEN '2024-03-01' AND '2024-03-15'
-    AND LOGEMENT.ID_LOGEMENT = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
+    AND LOGEMENT.ID_VILLAGE = (SELECT ID_VILLAGE FROM VILLAGE WHERE NOM_VILLAGE = 'Casa-Dali');
 ROLLBACK TRANSACTION;
+
