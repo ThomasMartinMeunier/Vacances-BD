@@ -1,6 +1,6 @@
 /* **********************************************************
 	DML Select
-	Sch�ma MRD:	"Cas Village Vacances"
+	Schéma MRD:	"Cas Village Vacances"
 	Auteur:		Arthur Tirado et Thomas Martin-Meunier
 ***********************************************************/
 
@@ -75,9 +75,9 @@ NO_CATEGORIE DESCRIPTION_CATEGORIE_VILLAGE                      PRIX_PAR_NUIT_PA
 1            tennis, piscine, mini-golf, golf, sauna, garderie  57,27 $
 2            tennis, piscine, golf, sauna                       48,64 $
 3            tennis, piscine, garderie                          43,64 $
-4            spa, ping-pong, activit�s nautiques                NULL
+4            spa, ping-pong, activités nautiques                NULL
 
-(4�lignes affect�es)
+(4 lignes affectées)
 */
 
 /*
@@ -137,7 +137,7 @@ NO_LOGEMENT NOM_VILLAGE     PAYS       CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEM
 108         Casa-Dali       Espagne    D2                 Chalet 4 personnes                  1005                                    24/03/2024
 108         Casa-Dali       Espagne    D2                 Chalet 4 personnes                  1005                                    25/03/2024
 
-(15�lignes affect�es)
+(15 lignes affectées)
 */
 
 /*
@@ -189,20 +189,20 @@ ORDER BY
 /*
 CLIENT                                                                                          ID_RESERVATION                          DATE_ARRIVE               NOM_VILLAGE     DUREE_VACANCE
 ----------------------------------------------------------------------------------------------- --------------------------------------- ------------------------- --------------- -------------
-Daho �tienne (1)                                                                                1012                                    mercredi 27 d�cembre 2023 Porto-Nuevo     7
-Daho �tienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
-Daho �tienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       5
-Fiset Val�rie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
-Fiset Val�rie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
+Daho Étienne (1)                                                                                1012                                    mercredi 27 décembre 2023 Porto-Nuevo     7
+Daho Étienne (1)                                                                                1014                                    jeudi 07 mars 2024        Porto-Nuevo     3
+Daho Étienne (1)                                                                                1000                                    vendredi 15 mars 2024     Casa-Dali       5
+Fiset Valérie (12)                                                                              1006                                    mercredi 06 mars 2024     Casa-Dali       4
+Fiset Valérie (12)                                                                              1010                                    mercredi 03 avril 2024    Casa-Dali       2
 Fortin Marine (9)                                                                               1017                                    dimanche 17 mars 2024     Kouros          4
 Fortin Marine (9)                                                                               1007                                    mardi 26 mars 2024        Casa-Dali       4
-Plante Jos�e (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     6
-Plante Jos�e (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       6
-St-Onge �ric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
-St-Onge �ric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
-St-Onge �ric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
+Plante Josée (8)                                                                                1015                                    samedi 09 mars 2024       Porto-Nuevo     6
+Plante Josée (8)                                                                                1001                                    mercredi 13 mars 2024     Casa-Dali       6
+St-Onge Éric (7)                                                                                1002                                    samedi 09 mars 2024       Casa-Dali       4
+St-Onge Éric (7)                                                                                1009                                    dimanche 31 mars 2024     Casa-Dali       6
+St-Onge Éric (7)                                                                                1003                                    mardi 11 mars 2025        Casa-Dali       4
 
-(12�lignes affect�es)
+(12 lignes affectées)
 
 */
 
@@ -251,8 +251,7 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 105         D2                 Chalet 4 personnes
 107         D2                 Chalet 4 personnes
 
-(4�lignes affect�es)
-
+(4 lignes affectées)
 
 B) Écrire la requête en utilisant l’opérateur EXISTS ou NOT EXISTS.
 */
@@ -289,20 +288,20 @@ NO_LOGEMENT CODE_TYPE_LOGEMENT DESCRIPTION_TYPE_LOGEMENT
 105         D2                 Chalet 4 personnes
 107         D2                 Chalet 4 personnes
 
-(4�lignes affect�es)
+(4 lignes affectées)
 */
 
 /*  
 --6
 
-A) Cr�er la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
-nuit�es vendues.
+A) Créer la vue V_NB_NUITEES qui compte pour chaque village vacances le nombre total de
+nuitées vendues.
 La vue doit contenir :
-- L�identifiant du village,
+- L'identifiant du village,
 - Le nom du village.
 - Le pays,
-- Le nombre total de nuit�es.
-Faire ensuite un SELECT pour v�rifier le contenu de la vue.
+- Le nombre total de nuitées.
+Faire ensuite un SELECT pour vérifier le contenu de la vue.
 */
 DROP VIEW IF EXISTS V_NB_NUITEES 
 GO 
@@ -344,12 +343,12 @@ Warning: Null value is eliminated by an aggregate or other SET operation.
 */
 
 /*
-B) �crire la requ�te suivante en utilisant la vue V_NB_NUITEES. (7 pts)
-� Quel ou quels sont le ou les villages avec le plus grand nombre de nuit�es vendues?
-� Indiquer dans l�ordre :
+B) Écrire la requête suivante en utilisant la vue V_NB_NUITEES. (7 pts)
+� Quel ou quels sont le ou les villages avec le plus grand nombre de nuitées vendues?
+� Indiquer dans l'ordre :
 - Le pays,
 - Le nom village,
-- Le nombre de nuit�es.
+- Le nombre de nuitées.
 */
 
 SELECT
@@ -361,20 +360,28 @@ WHERE
 	V_NB_NUITEES.NOMBRE_NUITEE IN (SELECT MAX(NOMBRE_NUITEE) FROM V_NB_NUITEES)
 
 /*
+PAYS       NOM_VILLAGE     NOMBRE_NUITEE
+---------- --------------- -------------
+Espagne    Casa-Dali       190
+
+(1 ligne affectée)
+*/
+
+/*
 --7
-A) Cr�er la vue V_RECAPITULATIF_RESERVATION qui contient toutes les r�servations.
+A) Créer la vue V_RECAPITULATIF_RESERVATION qui contient toutes les réservations.
 La vue doit contenir :
-- L�identifiant de la r�servation,
-- La date de r�servation,
-- L�identifiant du client,
-- L�identifiant du village,
-- La date de d�part de Montr�al,
-- La date de retour � Montr�al,
-- La dur�e de la r�servation en nombre de jours,
-- Le nombre de personnes concern�es par la r�servation (nombre de personnes
-h�berg�es),
-- Le nombre total de nuit�es qui seront factur�es.
-Faire ensuite un SELECT pour v�rifier le contenu de la vue.
+- L’identifiant de la réservation,
+- La date de réservation,
+- L’identifiant du client,
+- L’identifiant du village,
+- La date de départ de Montréal,
+- La date de retour à Montréal,
+- La durée de la réservation en nombre de jours,
+- Le nombre de personnes concernées par la réservation (nombre de personnes
+hébergées),
+- Le nombre total de nuitées qui seront facturées.
+Faire ensuite un SELECT pour vérifier le contenu de la vue.
 */
 DROP VIEW IF EXISTS V_RECAPITULATIF_RESERVATION 
 GO 
